@@ -40,6 +40,9 @@ public class Student extends User implements CanHaveRetake, Comparable<Students.
     public Student(String name, String surname, String id, String login, String password, Double gpa) {
     }
 
+    public Student(String name, String surname, String id, String login, String password, Double gpa, String course, Double mark) {
+    }
+
 
     public int hashCode() {
         return super.hashCode() + Objects.hash(GPA);
