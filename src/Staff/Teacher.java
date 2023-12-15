@@ -64,15 +64,15 @@ public class Teacher extends Employee implements CanGiveRetake {
     public void putMark(Student student, Mark mark, Course course, MarkType markType, Map<String, Integer> studentMark) {
 
         if (mark.canWriteFinal()) {
-            // Assuming the teacher wants to put marks for the first and second attempts
-            mark.setFirstAtt(generateRandomMark()); // Replace this with your logic for assigning a mark
-            mark.setSecondAtt(generateRandomMark()); // Replace this with your logic for assigning a mark
 
-            // Assuming the teacher wants to put a final score using the MarkType enum
+            mark.setFirstAtt(generateRandomMark());
+            mark.setSecondAtt(generateRandomMark());
+
+
             int finalScore = convertMarkTypeToScore(markType);
             mark.setFinalScore(finalScore);
 
-            // Display the information
+
             System.out.println("Mark set for student " + student.getName() + ":");
             System.out.println("First Attempt: " + mark.getFirstAtt());
             System.out.println("Second Attempt: " + mark.getSecondAtt());
@@ -80,6 +80,7 @@ public class Teacher extends Employee implements CanGiveRetake {
 
 
             studentMark.put(course.getName(), mark.calculateFinalScore());
+            StudentsByMark.put(student.getName(), mark.calculateFinalScore());
 
 
         } else {
@@ -88,14 +89,13 @@ public class Teacher extends Employee implements CanGiveRetake {
         }
     }
 
-    // Example method to generate a random mark (replace it with your logic)
+
     private int generateRandomMark() {
-        return (int) (Math.random() * 51); // Generates a random mark between 0 and 50
+        return (int) (Math.random() * 51);
     }
 
 
     private int convertMarkTypeToScore(MarkType markType) {
-        // Add your logic to map MarkType to a numerical score
         switch (markType) {
             case A:
                 return 95;
@@ -121,7 +121,7 @@ public class Teacher extends Employee implements CanGiveRetake {
                 return 0;
 
             default:
-                return 0; // Default to 0 if no match found
+                return 0;
         }
     }
 
@@ -135,13 +135,13 @@ public class Teacher extends Employee implements CanGiveRetake {
     @Override
     public void GivesRetake(List<Student> students, Vector<Mark> studentMark) {
         for (Student student : students) {
-            for (Mark mark : studentMark) {// Assuming 'mark' is the field storing the Mark object
+            for (Mark mark : studentMark) {
 
-                // Check if the student's mark is below the passing threshold
+
                 if (mark.calculateFinalScore() < 50) {
                     System.out.println(getName() + " is sending student " + student.getName() + " for retake.");
 
-                    // Assuming you have a method to increment the number of retakes for the student
+
                     student.incrementRetakes();
                 } else {
                     System.out.println("Teacher " + getName() + " can't send student " + student.getName() + " for retake.");
@@ -149,5 +149,22 @@ public class Teacher extends Employee implements CanGiveRetake {
             }
         }
 
+    }
+
+
+    public void ViewStudentsByMark() {
+        if (StudentsByMark.isEmpty()) {
+            System.out.println("No student marks available for viewing.");
+            return;
+        }
+
+        System.out.println("Students and their marks for the course " + TeachingCourse + ":");
+
+        for (Map.Entry<String, Integer> entry : StudentsByMark.entrySet()) {
+            String studentName = entry.getKey();
+            int mark = entry.getValue();
+
+            System.out.println(studentName + ": " + mark);
+        }
     }
 }
